@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar números de documentos</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="img"></div>
+    <div class="container">
+        <div class="title">
+            <h1>Validação de Documentos</h1>
+        </div>
+
+        <div class="main-box">
+
+            <div class="cpf">
+                <!-- validar CPF -->
+                <div>
+                    <h2 id="titulo"> Validar CPF</h2>
+                </div>
+                <div>
+                    <p id="acoes"> Digite o CPF sem pontos ou traço:<br></p>
+                </div>
+                <div><input id="cpf" placeholder="000.000.000-00" maxlength="11"></div>
+                <div><input class="validar" type="button" value="Validar CPF" onclick="validarCPF();"></div>
+            </div>
+
+
+
+            <div class="rg">
+                <!-- validar RG -->
+                <div>
+                    <h2 id="titulo">Validar RG</h2>
+                </div>
+                <div>
+                    <p id="acoes"> Digite o RG sem pontos ou traço:<br></p>
+                </div>
+                <div><input id="RG" placeholder="00.000.000-00" maxlength="10"></div>
+                <div><input class="validar" type="button" value="Validar RG" onclick="validarRG();"></div>
+
+            </div>
+
+
+            <div class="cnpj">
+                <!-- validar cnpj -->
+                <div>
+                    <h2 id="titulo"> Validar CNPJ</h2>
+                </div>
+                <div>
+                    <p id="acoes"> Digite o cnpj sem pontos ou traço:<br></p>
+                </div>
+                <div><input id="CNPJ" placeholder="00.000.000/0000-00" maxlength="14"></div>
+                <div><input class="validar" type="button" value="Validar CNPJ" onclick="validarCnpj();"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <p id="content-modal"></p>
+            <span class="close">&times;</span>
+        </div>
+
+    </div>
+
+
+
+
+
+    <script>
+
+
+        // Função para validar número de CPF------------------------------------------------------------
+        function validarCPF() {
+            // receber o cpf informado no pagina html
+            let cpf = String(document.getElementById('cpf').value);
+            let cpfDV1 = cpf[9];
+            let cpfDV2 = cpf[10];
+
+            // armazena a somatoria de valores para o calculo dos dv
+            let soma = 0;
+            // laço que calcula a soma do primeiro DV
+            for (let i = 0; i <= 8; i++) {
+                soma += cpf[i] * (10 - i);
+            }
+            // calculo do primero DV
+            let calcDv1 = 11 - (soma % 11);
+            // zera a soma para iniciar o proximo passo
+            soma = 0;
+            for (let i = 0; i <= 9; i++) {
+                soma += cpf[i] * (11 - i);
+            }
+            // calculo o segundo DV
+            let calcDv2 = 11 - (soma % 11);
+            // verificação se os DV calulados são iguais aos DVs digitados
+            if (cpfDV1 == calcDv1 && cpfDV2 == calcDv2) {
+                modalOpen();
+                document.getElementById('content-modal').innerHTML = "O CPF digitado é válido";
+            } else {
+                modalOpen();
+                document.getElementById('content-modal').innerHTML = "O CPF digitado é inválido";
+
+            }
+            this.cpf.value = '';
+        }
+
+
+
+
+        // Função para validar número de RG----------------------------------------------------
+
+        function validarRG() {
+            // recebe o valor inputado
+            let rg = String(document.getElementById('RG').value);
+            let rgDiv = rg[8];  //variável que verifica o último digito
+            soma = 0;
+            // percorre o array e faz a soma para o digito
+            for (let i = 0; i <= 7; i++) {
+                soma += rg[i] * (i + 2);
+            }
+            // calcula o digito
+            let calcDiv = 11 - (soma % 11);
+            // verifica se o digito é válido
+            if (rgDiv == calcDiv) {
+                modalOpen();
+                document.getElementById('content-modal').innerHTML = "O RG digitado é válido";
+            } else {
+                modalOpen();
+                document.getElementById('content-modal').innerHTML = "O RG digitado é inválido";
+            }
+            this.rg.value = '';
+        }
+
+
+        // funcão para validar cnpj----------------------------------------------------------
+
+        function validarCnpj() {
+            // receber o cpf informado no pagina html e transforma em string
+            let cnpj = String(document.getElementById('CNPJ').value);
+
+            let cnpjD1 = cnpj[12]; // recebe o penúltimo digito
+            let cnpjD2 = cnpj[13]; // recebe o último digito
+
+
+            // variáveis que divide o cnpj em 4 partes
+            let cnpjR = cnpj.split('').reverse().join('') //recebe os números e os ordena de trás para frente 
+            let cnpjDV1 = cnpjR.slice(2, 10); // recebe os primeiros 9 números partindo do índice 2 do array
+            let cnpjDV2 = cnpjR.slice(10, 15); // recebe os 4 últimos do array
+            let cnpjDV3 = cnpjR.slice(1, 10); // recebe os primeiros 9 números partindo do índice 1 do array
+            let cnpjDV4 = cnpjR.slice(9, 15);// recebe os 5 últimos do array
+
+            // armazena a somatoria de valores para o calculo dos dv
+            let soma = 0;
+            // laço que calcula a soma da primeira partição do array
+            for (let i = 0; i <= 7; i++) {
+                soma += cnpjDV1[i] * (i + 2);
+            }
+            // soma resultante
+            soma = soma;
+
+            // laço que calcula a soma da segunda partição do array
+            for (let i = 0; i <= 3; i++) {
+                soma += cnpjDV2[i] * (i + 2);
+            }
+
+            // calculo que encontra o valor do primeiro digito
+            let calcDv1 = 11 - (soma % 11);
+            //verifica se é maior que 10 e caso true o defini como 0.
+            if (calcDv1 >= 10) {
+                calcDv1 = 0;
+            };
+
+            // variável com o primeiro digito
+            let somaCalc1 = calcDv1;
+
+            // zera a soma para iniciar a validação do segundo digito
+            soma = 0
+            // laço que calcula a soma da terceira partição do array
+            for (let i = 0; i <= 7; i++) {
+                soma += cnpjDV3[i] * (i + 2);
+            }
+            // soma resultante
+            soma = soma;
+            // laço que calcula a soma da quarta partição do array
+            for (let i = 0; i <= 4; i++) {
+                soma += cnpjDV4[i] * (i + 2);
+            }
+            // calculo que encontra o valor do segundo digito
+            let calcDv2 = 11 - (soma % 11);
+            //verifica se é maior que 10 e caso true o defini como 0.
+            if (calcDv2 >= 10) {
+                calcDv2 = 0;
+            };
+            // variável com o segundo digito
+            let somaCalc2 = calcDv2;
+
+            // verificação se os digitos calulados são iguais aos  digitados
+            if (cnpjD1 == somaCalc1 && cnpjD2 == somaCalc2) {
+                modalOpen();
+                document.getElementById('content-modal').innerHTML = "O CNPJ digitado é válido";
+            } else {
+                modalOpen();
+                document.getElementById('content-modal').innerHTML = "O CNPJ digitado é inválido";
+            }
+            this.cnpj.value = '';
+        }
+
+        // recebe o modal
+        var modal = document.getElementById("myModal");
+
+
+        // recebe o span que fecha o modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // função para abrir o modal 
+        function modalOpen() {
+            modal.style.display = "block";
+        }
+
+        // quando clica no <span> (x), fecha o modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // função que quando clicar fora da área do modal ele é fechado
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+
+    </script>
+
+</body>
+
+</html>
