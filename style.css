@@ -136,3 +136,16 @@ input {
   text-decoration: none;
   cursor: pointer;
 }
+
+@media (min-width: 240px) and (max-width: 575px) {
+  .title h1 {
+    font-size: 40px;
+  }
+  .container {
+    display: block;
+  }
+  .main-box {
+    display: block;
+    margin-left: -35px;
+  }
+}
